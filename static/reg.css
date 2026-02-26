@@ -1,0 +1,96 @@
+/*------------РЕГИСТРИАЦИЯ--------*/
+
+
+
+body.auth-page {
+    height: 100vh;
+    background: radial-gradient(circle at center, rgba(149, 1, 48, 1), var(--pink));
+    background-size: cover;
+    background-position: left center;
+    display: flex;
+    flex-direction: column;      
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+header {
+    flex-direction: column;
+    gap: 5px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    backdrop-filter: blur(24px) brightness(1.1);
+    border: var(--red) 1px solid;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'NameBouquetFont', serif;
+}
+#h1_registration{
+    color: var(--cream);
+    text-align: center;
+    font-size: 3rem; 
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.reg-log-btn{
+    height: 50px;
+    font-size: 1.1rem;
+    background: var(--pink) !important;
+}
+input {
+    background-color: var(--cream);
+    height: 45px;
+    padding: 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    color: var(--dark-bg);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--pink);
+}
+
+input::placeholder {
+    color: #999;
+}
+.transition {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    color: var(--cream);
+    margin-bottom: 10px;
+}
+label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--cream);
+}
+.link {
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.link:hover {
+    color: var(--red);
+}
+
+#Login_Form {
+    margin-top: 30px;
+}

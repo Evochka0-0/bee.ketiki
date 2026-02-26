@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Оплата заказа | bee.кетики</title>
+        <link rel="stylesheet" href="base.css" />
+        <link rel="stylesheet" href="styleA.css" />
+        <link rel="stylesheet" href="payment.css" />
+    </head>
+    <body>
+        <header>
+            <a href="/">
+                <img id="logo" src="/images/logo.png" alt="Логотип" />
+            </a>
+            <h1>
+                <span class="special-e">
+                    bee.</span>кеtики
+            </h1>
+            <div style="flex-grow: 1"></div>
+            <img
+                id="home"
+                class="header-icon"
+                src="/images/home.png"
+                alt="Личный кабинет"
+            />
+        </header>
+
+        <main id="payment_main">
+            <div class="payment_container">
+                <h1 id="payment_title">Оплата заказа</h1>
+
+                <div class="order_summary">
+                    <div class="summary_row">
+                        <span>Заказ №:</span>
+                        <span id="order_id_display">...</span>
+                    </div>
+                    <div class="summary_row total">
+                        <span>К оплате:</span>
+                        <span id="order_amount_display">...</span>
+                    </div>
+                </div>
+
+                <div class="fake_payment_form">
+                    <h2>Данные для оплаты</h2>
+                    <div class="form_group">
+                        <label for="card_number">Номер карты</label>
+                        <input
+                            type="text"
+                            id="card_number"
+                            placeholder="1234 5678 9101 1121"
+                            value="4000 1234 5678 9010"
+                            disabled
+                        />
+                    </div>
+                    <div class="form_row">
+                        <div class="form_group">
+                            <label for="card_expiry">Срок</label>
+                            <input
+                                type="text"
+                                id="card_expiry"
+                                placeholder="MM/YY"
+                                value="12/25"
+                                disabled
+                            />
+                        </div>
+                        <div class="form_group">
+                            <label for="card_cvc">CVC</label>
+                            <input
+                                type="text"
+                                id="card_cvc"
+                                placeholder="123"
+                                value="123"
+                                disabled
+                            />
+                        </div>
+                    </div>
+                    <p class="form_note">
+                        Это тестовая оплата, данные карты введены для примера.
+                    </p>
+                </div>
+
+                <button id="confirm_payment_button" class="buy_buttons">
+                    Подтвердить оплату
+                </button>
+
+                <div id="payment_loader" class="hidden">
+                    <div class="spinner"></div>
+                    <p>Обрабатываем платёж...</p>
+                </div>
+
+                <div id="payment_success" class="hidden">
+                    <h2>✅ Оплата прошла успешно!</h2>
+                    <p>
+                        Ваш заказ оплачен и передан в работу. Вы будете
+                        перенаправлены в личный кабинет.
+                    </p>
+                    <a href="/home.html" class="btn_catalog"
+                        >Перейти в личный кабинет</a
+                    >
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>
+                <a id="amygdala" href="https://t.me/Amygdala_Eva"
+                    >@Amygdala_Eva</a>
+            </p>
+        </footer>
+        <script type="module" src="payment.js"></script>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <!--кодировка для кириллицы-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>bee.кетики</title>
+        <link rel="stylesheet" href="base.css">
+        <link rel = "stylesheet" href="reg.css">
+    </head>
+    <body class="auth-page">
+        <main>
+            <h1 id = "h1_registration" class = "head_h1">Вход</h1>
+            <div class = "transition" id = "transition_to_registration">
+                <p>Еще не зарегестрированы?</p>
+                <p class = "link" id = "reg_link">Регистрация</p> <!--ссылка -->
+            </div>
+            <form id = "Login_Form">
+                <label for="phone">Номер телефона:</label>
+                <input type="tel" id="phone" placeholder="+7 000 000 00 00" required>
+
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" placeholder="******" required>
+
+                <button id = "log-button" class = "reg-log-btn">Войти</button>
+            </form>
+        </main>
+        
+        <script type="module" src = "logIn.js"></script>
+    </body>
+</html>

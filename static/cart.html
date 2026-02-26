@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Корзина | bee.кетики</title>
+        <link rel="stylesheet" href="base.css" />
+        <link rel="stylesheet" href="styleA.css" />
+        <link rel="stylesheet" href="cart.css" />
+    </head>
+    <body>
+        <header>
+            <a href="/">
+                <img id="logo" src="/images/logo.png" alt="Логотип" />
+            </a>
+            <h1>
+                <span class="special-e">
+                    bee.</span>кеtики
+            </h1>
+            <div style="flex-grow: 1"></div>
+            <img
+                id="home"
+                class="header-icon"
+                src="/images/home.png"
+                alt="Личный кабинет"
+            />
+        </header>
+        <main id="cart_main">
+            <section id="left">
+                <div id="products_container">
+                    <p id="loading_patch">...загрузка...</p>
+                </div>
+            </section>
+
+            <section id="right">
+                <h2 class="right_title">Ваш заказ</h2>
+
+                <div class="order_summary">
+                    <div class="summary_row">
+                        <span class="summary_label">Товаров:</span>
+                        <span class="summary_value" id="final_count">0</span>
+                    </div>
+                    <div class="summary_row summary_total">
+                        <span class="summary_label">Итого:</span>
+                        <span class="summary_value" id="final_summ">0 ₽</span>
+                    </div>
+                </div>
+
+                <div id = "deadline_choose">
+                    <h3>Выберите дату самовывоза</h3>
+                    <input type = "datetime-local" id = "datetime-local_deadline">
+                </div>
+
+                <button class="buy_buttons" id="pay_button">
+                    Оформить заказ
+                </button>
+
+                <div class="order_info">
+                    <div class="info_item">
+                        <span class="info_icon">🌸</span>
+                        <span>Самовывоз из магазина</span>
+                    </div>
+                </div>
+
+                <p class="offer_text">
+                    Нажимая «Оформить заказ», вы соглашаетесь с
+                    <a href="#">условиями публичной оферты</a>
+                </p>
+            </section>
+
+            <div id="emty_cart" class="cart_empty_hidden">
+                <h2>🛒 Корзина пуста</h2>
+                <p>Добавьте букет из каталога</p>
+                <button id = "btn_catalog" class="btn">В каталог</button>
+            </div>
+        </main>
+        <footer>
+            <p>
+                <a id="amygdala" href="https://t.me/Amygdala_Eva"
+                    >@Amygdala_Eva</a>
+            </p>
+        </footer>
+        <script type="module" src="cart.js"></script>
+    </body>
+</html>

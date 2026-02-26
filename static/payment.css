@@ -1,0 +1,197 @@
+/* ============================================
+   СТИЛИ ДЛЯ СТРАНИЦЫ ОПЛАТЫ
+   ============================================ */
+
+#payment_main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
+    padding: 40px 20px;
+}
+
+.payment_container {
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--cream);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    text-align: center;
+}
+
+#payment_title {
+    font-size: 2rem;
+    color: var(--dark-bg);
+    margin: 0 0 25px 0;
+}
+
+/* ============================================
+   ИНФОРМАЦИЯ О ЗАКАЗЕ
+   ============================================ */
+.order_summary {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: left;
+    border: 1px solid #eee;
+}
+
+.summary_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    color: #555;
+    padding: 10px 0;
+}
+
+.summary_row span:last-child {
+    font-weight: 600;
+    color: var(--dark-bg);
+}
+
+.summary_row.total {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--dark-bg);
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+.summary_row.total span:last-child {
+    font-size: 1.8rem;
+    color: var(--pink);
+}
+
+/* ============================================
+   ФЕЙКОВАЯ ФОРМА ОПЛАТЫ
+   ============================================ */
+.fake_payment_form {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.fake_payment_form h2 {
+    font-size: 1.3rem;
+    margin: 0 0 20px 0;
+    text-align: center;
+    color: var(--dark-bg);
+}
+
+.form_group {
+    margin-bottom: 15px;
+}
+
+.form_group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.form_group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f0f0f0;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.form_row {
+    display: flex;
+    gap: 15px;
+}
+
+.form_row .form_group {
+    flex: 1;
+}
+
+.form_note {
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* ============================================
+   КНОПКА И ЛОАДЕР
+   ============================================ */
+#confirm_payment_button {
+    width: 100%;
+    height: 55px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#payment_loader {
+    margin-top: 30px;
+    color: var(--dark-bg);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: var(--pink);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   СООБЩЕНИЕ ОБ УСПЕХЕ
+   ============================================ */
+#payment_success {
+    margin-top: 20px;
+}
+
+#payment_success h2 {
+    color: #28a745;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+#payment_success p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.btn_catalog {
+    display: inline-block;
+    padding: 14px 35px;
+    background-color: var(--pink);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition:
+        background 0.2s,
+        transform 0.2s;
+}
+
+.btn_catalog:hover {
+    background-color: var(--pink-dark);
+    transform: translateY(-2px);
+}

@@ -1,0 +1,96 @@
+@keyframes little-jumps {
+    5%, 15%, 35%, 45% {
+        transform: translateX(-50%) translateY(0);
+    }
+    0%, 10%, 20%, 30%, 40%, 50%, 100% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+}
+
+@font-face {
+    font-family: 'special';
+    src: url('./fonts/Saint Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#slider_container{
+    position: relative;
+    overflow: hidden;
+}
+
+#track_container{
+    display: flex;
+    flex-shrink: 1;
+    z-index: 0;
+    transition: transform 0.7s ease;
+    scroll-snap-type:  x mandatory;
+}
+
+.spacial_bouq_slide{
+    min-width: 99vw;
+    background-position: center top;
+    scroll-snap-align: start;
+    position: relative;
+}
+
+.name_button{
+    position: absolute;
+    max-width: 45%;
+    right: 160px;
+    bottom: 200px;
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;    
+}
+
+.spacial_bouq_name{
+    font-family: "special", serif;
+    font-size: 4rem;
+}
+
+#arrows{
+    display: flex;
+    justify-content: center;
+    justify-content: space-between;
+    position: absolute;
+    width: 600;
+    bottom: 270px;       /* Отступ от низа родителя */
+    right: 15px; 
+    left: 15px;
+}
+
+#bottom_arrow_conteiner{
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    opacity: 0.6;
+    height: 50px;
+    width: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    justify-content: flex-end;
+    background: radial-gradient(circle at center, rgba(254, 236, 222, 0.5), rgba(85, 84, 103, 0.1));
+}
+
+#jumping-h3{
+    position: absolute;
+    animation: little-jumps 10s linear 5s infinite normal backwards;
+    left: 50%;
+}
+
+.arrows{
+    height: 50px;
+    width: auto;
+    opacity: 0.5;
+}
+.arrows:hover{
+    opacity: 0.7; 
+    background-color: rgba(
+        255,
+        255,
+        255,
+        0.2
+    ); 
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <!--кодировка для кириллицы-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>bee.кетики</title>
+        
+        <link rel="stylesheet" href="base.css">
+        <link rel = "stylesheet" href="home.css">
+    </head>
+    <body>
+        <header>
+            <a href="/"><img id="logo" src="/images/logo.png" alt="Логотип"></a>
+            <h1>
+                <span class="special-e">
+                    bee.</span>кеtики
+            </h1>
+        </header>
+        <main id="dashboard">
+            <div id="profile">
+                <div id="head_profile">
+                    <div id="user_info">
+                        <h1 id="my_name">...загрузка...</h1>
+                        <p id="user_role">Клиент</p>
+                    </div>
+                    <div id="profile_actions">
+                        <img class="icon" id="edit_icon" src="/images/put_info.png" alt="Редактировать" title="Редактировать профиль">
+                        <img class="icon" id="log_out" src="/images/exit.png" alt="Выйти" title="Выйти из аккаунта">
+                    </div>
+                </div>
+                <div id="client_info_container">
+                    <h2>Личные данные</h2>
+                    <div class="info_row">
+                        <span class="info_label">Телефон:</span>
+                        <span id="client_phone" class="info_value">...загрузка...</span>
+                    </div>
+                    <div class="info_row">
+                        <span class="info_label">Email:</span>
+                        <span id="client_email" class="info_value">...загрузка...</span>
+                    </div>
+                </div>
+            </div>
+            <div id="orders_empty" class="empty_state-hidden">
+                <h2>У вас еще нет заказов</h2>
+                <p>Выберите букет в каталоге и оформите свой первый заказ!</p>
+                <a href="/" class="btn_catalog">Перейти в каталог</a>
+            </div>
+
+            <div id = "my_orders">
+                <div class="section" id = "ready_section">
+                    <h2 class = "order_section_name" id = "readyh2">Готовые</h2>
+                    <div class="orders" id = "ready_orders">
+                        <p class="loading"></p>
+                    </div>
+                </div>
+                <div class="section" id = "in_process_section">
+                <h2 class = "order_section_name" id = "in_processh2">Активные</h2>
+                    <div class="orders" id = "in_process_orders">
+                        <p class="loading"></p>
+                    </div>
+                </div>
+                <div class="section" id = "old_section">
+                    <h2 class = "order_section_name" id = "oldh2">Завершенные</h2>
+                    <div class="orders" id = "old_orders">
+                        <p class="loading"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="adm_orders_empty" class="adm_empty_state-hidden">
+                <h2>Заказов нет</h2>
+                <span>☠️</span>
+            </div>
+
+            <div id = "admin_panel" class = "admin_panel_hidden">
+                <div class="section" id = "in_process_adm">
+                <h2 class = "order_section_name" id = "in_processh2_adm">Активные</h2>
+                    <div class="orders" id = "in_process_orders_adm">
+                        <p class="loading"></p>
+                    </div>
+                </div>
+                <div class="section" id = "ready_adm">
+                    <h2 class = "order_section_name" id = "readyh2_adm">Готовые</h2>
+                    <div class="orders" id = "ready_orders_adm">
+                        <p class="loading"></p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>
+                <a id="amygdala" href="https://t.me/Amygdala_Eva"
+                    >@Amygdala_Eva</a>
+            </p>
+        </footer>
+
+        <div id = "modal_overlay" class="modal-hidden">
+            <div class = "modal-window">
+                <button id = "close_modal">Закрыть</button>
+                <h2 id = "edit-h2">Изменить профиль</h2>
+                <form id = "edit_form">
+                    <label for="lastname">Ваша фамилия:</label>
+                    <input type="text" id="lastname" placeholder="Фамилия" required>
+
+                    <label for="firstname">Ваше Имя:</label>
+                    <input type="text" id="firstname" placeholder="Имя" required>
+
+                    <label for="phone">Номер телефона:</label>
+                    <input type="tel" id="phone" placeholder="+7 000 000 00 00" required>
+
+                    <label for="email">Электронная почта:</label>
+                    <input type="email" id="email" placeholder="Имя" required>
+                    
+                    <button id = "edit-button">Сохранить</button>
+                </form>
+            </div>
+        </div>
+        <script type="module" src = "home.js"></script>
+    </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <!--кодировка для кириллицы-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>bee.кетики</title>
+        <link rel="stylesheet" href="base.css">
+        <link rel = "stylesheet" href="styleA.css">
+        <link rel = "stylesheet" href="slider.css">
+    </head>
+    <body>
+        <header>
+            <a href="/">
+            <img id="logo" src="/images/logo.png" alt="Логотип">
+            </a>
+            <h1>
+                <span class="special-e">
+                    bee.</span>кеtики
+            </h1>
+            <div style="flex-grow: 1"></div>
+            <img id="cart_id" class="header-icon" src="/images/basket.png" alt="Корзина">
+            <img id="home" class="header-icon" src="/images/home.png" alt="Личный кабинет">
+        </header>
+        <main>
+            <div id = "slider_container">
+                <div id = "track_container">
+
+                </div>
+                <div id = "dots">
+                    <!--точки в углу для перелистывания-->
+                    <div id = "arrows">
+                        <img id = "back" class = "arrows" src="/images/back.png" alt = "Назад">
+                        <img id = "forward" class = "arrows" src="/images/forward.png" alt = "Вперед">
+                    </div>
+                    <div id = "bottom_arrow_conteiner">
+                        <h3 id = "jumping-h3">Смотреть каталог ⤵︎</h3>
+                    </div>
+                </div>
+            </div>
+            <div id = "bouquets-container">
+                <p>...загрузка товаров...</p>
+            </div>
+        </main>
+        <footer>
+            <p>
+                <a id="amygdala" href="https://t.me/Amygdala_Eva"
+                    >@Amygdala_Eva</a>
+            </p>
+        </footer>
+        <script type="module" src = "main_script.js"></script>
+    </body>
+</html>

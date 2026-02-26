@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <!--кодировка для кириллицы-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>bee.кетики</title>
+        <link rel="stylesheet" href="base.css">
+        <link rel = "stylesheet" href="styleA.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oi&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <a href="/">
+                <img id="logo" src="/images/logo.png" alt="Логотип" />
+            </a>
+            <h1>
+                <span class="special-e">
+                    bee.</span>кеtики
+            </h1>
+            <div style="flex-grow: 1"></div>
+            <img id="cart_id" class="header-icon" src="/images/basket.png" alt="Корзина">
+            <img
+                id="home"
+                class="header-icon"
+                src="/images/home.png"
+                alt="Личный кабинет"
+            />
+        </header>
+        <main>
+            <section class = "product-container">
+
+                <!--слева-->
+                <div id="visuals_container">
+                    <img id="bouquet_image" src="" alt="Фото товара" />
+                </div>
+
+                <!--справа-->
+                <div id = "info_product">
+                    <h1 id="name_product_container">"...загрузка..."</h1>
+                    <div id = "buy_container">
+                        <!--цена и кнопка добавить в корзину-->
+                        <p id="price_container"><span id="price_span">0</span></p>
+                        <button class = "buy_buttons" id="buy_button">В корзину</button> 
+                        <button class = "incart_button" id="delete_button" style="width: fit-content;">🗑️</button>
+                    </div>
+                    <div id="description_wrapper">
+                        <h1 id="header_right">Описание</h1>
+                        <!--описание и отзывы-->
+                        <p id="description_container">...загрузка...</p>
+                    </div>
+                    <div id = "reviews_conteiner">
+                        <p class = "loading">...загрузка отзывов...</p>
+                        <div id = "reviews">
+                            <!--контейнер с отзывами
+                            GET reviews
+                            -->
+                        </div>
+                        <!--по умолчанию скрыт-->
+                        <div id = "review_writer" class = "review_writer_hidden">
+                            <!--контейнер для написания отзывов
+                            POST reviews
+                            -->
+                            <div id = "review_items">
+                                <!--label for="reviw_select">Оценка</label-->
+                                <select id = "reviw_select" class = "selector">
+                                    <option value="0">-- Выберите оценку --</option>
+                                    <option value="5">отлично</option>
+                                    <option value="4">хорошо</option>
+                                    <option value="3">нормально</option>
+                                    <option value="2">плохо</option>
+                                    <option value="1">очень плохо</option>
+                                </select>
+                                <button id = "but_send">Отправить</button>
+                            </div>
+                            <textarea id = "textarea" placeholder = "Напишите свои впечатления о товаре"></textarea>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+        </main>
+        <footer>
+            <p>
+                <a id="amygdala" href="https://t.me/Amygdala_Eva"
+                    >@Amygdala_Eva</a>
+            </p>
+        </footer>
+        <script type="module" src= "product.js"></script>
+    </body>
+</html>

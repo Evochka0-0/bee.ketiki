@@ -1,0 +1,260 @@
+/* ============================================
+   СТИЛИ ДЛЯ СТРАНИЦЫ КОРЗИНЫ
+   ============================================ */
+
+#cart_main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+#left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0; 
+}
+
+#products_container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ============================================
+   КАРТОЧКА ТОВАРА (ЛЕВАЯ ЧАСТЬ)
+   ============================================ */
+
+.product_card {
+    display: grid;
+    grid-template-columns: 140px 1fr auto auto 44px;
+    align-items: center;
+    column-gap: 22px;
+
+    background-color: var(--cream);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s ease;
+}
+
+.product_card:hover {
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.09);
+}
+
+.image_bouquet {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.product_info {
+    min-width: 0;
+}
+
+.product_name {
+    margin: 0;
+    font-size: 1.6rem;
+    color: var(--dark-bg);
+    font-weight: 700;
+    line-height: 1.15;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product_quantity {
+    text-align: center;
+    min-width: 60px;
+}
+
+.count_product {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+    font-weight: 600;
+}
+
+.product_price {
+    text-align: right;
+    min-width: 120px;
+}
+
+.summ_price {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--dark-bg);
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    white-space: nowrap; 
+}
+
+#del_icon {
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    opacity: 0.65;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+    justify-self: center; 
+}
+
+#del_icon:hover {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+/* ============================================
+   ПРАВАЯ КОЛОНКА - ОФОРМЛЕНИЕ ЗАКАЗА
+   ============================================ */
+#right {
+    width: 380px;
+    min-width: 320px;
+    background-color: var(--cream);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    position: sticky; 
+    top: 100px;
+}
+
+.right_title {
+    margin: 0 0 25px 0;
+    font-size: 1.6rem;
+    color: var(--dark-bg);
+    text-align: center;
+}
+
+.order_summary {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.summary_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.summary_row:first-child {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+.summary_label {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.summary_value {
+    font-size: 1.2rem;
+    color: var(--dark-bg);
+    font-weight: 600;
+}
+
+.summary_total .summary_label {
+    font-size: 1.2rem;
+    color: var(--dark-bg);
+    font-weight: 600;
+}
+
+.summary_total .summary_value {
+    font-size: 1.8rem;
+    color: var(--pink);
+    font-weight: 800;
+}
+
+#pay_button {
+    width: 100%;
+    height: 55px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.order_info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.info_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.info_icon {
+    font-size: 1.2rem;
+}
+
+.offer_text {
+    font-size: 0.8rem;
+    color: #999;
+    text-align: center;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.offer_text a {
+    color: var(--pink);
+    text-decoration: none;
+}
+
+.offer_text a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   ПУСТАЯ КОРЗИНА
+   ============================================ */
+.emty_main {
+    justify-content: center !important;
+}
+
+#emty_cart {
+    text-align: center;
+    padding: 60px 40px;
+    background-color: var(--cream);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+#emty_cart h2 {
+    color: var(--dark-bg);
+    font-size: 1.8rem;
+    margin: 0 0 15px 0;
+}
+
+#emty_cart p {
+    color: #666;
+    margin: 0 0 25px 0;
+    font-size: 1.1rem;
+}
+
+.cart_empty_hidden {
+    display: none !important;
+}
+
+

@@ -1,0 +1,255 @@
+
+.description{
+    margin-top: 10px !important;
+    margin-bottom: 0px !important;
+    max-width: 300px;
+}
+
+.what_how_much{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* ============================================
+   ОФОРМЛЕНИЕ СТРАНИЦЫ ЗАКАЗА (ORDER.HTML)
+   ============================================ */
+
+/* Контейнер для блоков с данными клиента и заказа */
+#data {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0px auto;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+/* Общие стили для карточек информации */
+#client_info, #order_info {
+    background-color: var(--cream);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 25px var(--shadow);
+    flex: 1;
+    min-width: 320px;
+    max-width: 550px;
+    border: 2px solid transparent;
+}
+
+
+/* Блок клиента */
+#client_info #name {
+    font-family: 'NameBouquetFont', serif;
+    font-size: 1.8rem;
+    color: var(--pink-dark);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--pink-light);
+    padding-bottom: 10px;
+}
+
+#client_info p {
+    font-size: 1.1rem;
+    color: var(--dark-bg);
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Блок информации о заказе */
+.order_header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.order_header > span {
+    font-size: 0.9rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.deadl_div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 12px;
+    border-left: 5px solid var(--pink);
+}
+
+.deadline_mess {
+    font-size: 1rem;
+    color: var(--dark-bg);
+    margin: 0;
+}
+
+.deadline {
+    font-size: 1.2rem;
+    color: var(--pink-dark);
+    margin: 0;
+}
+
+/* Сумма и статусы */
+#summ_status {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--pink-light);
+}
+
+#total_cost {
+    font-family: 'PriceFont', serif;
+    color: var(--dark-bg);
+    margin: 0;
+}
+
+#status, #payment_status {
+    display: inline-block;
+    width: fit-content;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+/* Цвета для статусов (по аналогии с админкой) */
+#status {
+    background-color: var(--pink);
+    color: white;
+    box-shadow: 0 4px 10px rgba(226, 150, 178, 0.4);
+}
+
+#payment_status {
+    background-color: var(--dark-bg);
+    color: var(--cream);
+}
+
+/* Секция состава заказа */
+#bouquets-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    margin: 0 20px 40px 20px;
+}
+
+/* Заголовок для состава заказа (добавляется через CSS, так как в HTML его нет) */
+#bouquets-container::before {
+    content: "Состав заказа";
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-family: 'PickMeFont', serif;
+    font-size: 3rem;
+    color: var(--cream);
+}
+
+#bouquets-container .card {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    
+    background-image: url('/images/paper.png'); 
+    background-size: 100% 100%; 
+    background-repeat: no-repeat;
+    background-position: center;
+
+    /* Фиксируем размеры, чтобы фон не искажался */
+    width: 400px; 
+    min-height: 620px;
+    height: auto !important;
+    
+    /* УВЕЛИЧЕННЫЕ ОТСТУПЫ: 
+       130px сверху — чтобы уйти ниже дырок
+       60px по бокам — чтобы не наезжать на скотч
+       80px снизу — чтобы не перекрывать нижний скотч и рваный край
+    */
+    padding: 136px 60px 80px 60px !important; 
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+
+    /* Важно: drop-shadow обводит контур бумаги и скотча, а не делает квадратную тень */
+    filter: drop-shadow(10px 15px 15px rgba(0, 0, 0, 0.4));
+    
+    transition: transform 0.3s ease;
+    margin: 10px;
+}
+
+#bouquets-container .card:hover {
+    transform: translateY(-8px) rotate(1deg);
+    filter: drop-shadow(12px 20px 20px rgba(0, 0, 0, 0.5));
+}
+
+/* Чтобы контент внутри (картинка и текст) не вылезал за границы чистого листа */
+#bouquets-container .card > * {
+    width: 100%;
+    max-width: 280px; /* Ограничиваем внутреннюю ширину контента */
+}
+
+#bouquets-container .card:hover {
+    transform: translateY(-5px) rotate(1deg);
+}
+
+#bouquets-container .card .quantity {
+    /* Сбрасываем позиционирование и оформление "кнопки" */
+    position: static; 
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    border: none;
+    
+    /* Стили текста */
+    font-family: 'PriceFont', serif;
+    font-size: 2rem;
+    color: var(--var --dark-bg);
+    font-weight: 500;
+    margin: 5px 0 10px 0;
+    text-align: center;
+    display: block;
+}
+
+/* Стили заголовка букета в карточке для лучшей иерархии */
+#bouquets-container .card .name_b {
+    font-family: 'NameBouquetFont', serif;
+    font-size: 1.5rem;
+    color: var(--dark-bg);
+    font-weight: bold;
+}
+
+/* Небольшой отступ для картинки, так как количество теперь в потоке текста */
+#bouquets-container .card .image {
+    margin-top: 10px;
+    display: block;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 3rem;
+    }
+    
+    #data {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 15px;
+    }
+
+    #client_info, #order_info {
+        width: 100%;
+    }
+}
