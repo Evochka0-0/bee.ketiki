@@ -85,22 +85,6 @@ function updateCards(bouquets) {
 }
 
 function loadBouquets() {
-  fetch("/bouquets_colors")
-  .then(response => {
-    if(response.ok){
-      return response.text();
-    }
-    else{
-      throw new Error("Статус: " + response.status);
-    }
-  })
-  .then(text => {
-    console.log(text);
-  })
-  .catch(err => {
-    console.log(err.message, err);
-  })
-  
 
   const param = "all";
   fetch(`/bouquets?type=${param}`) //отправляет запрос на сервер по адресу /bouquets

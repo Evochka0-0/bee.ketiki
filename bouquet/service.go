@@ -151,12 +151,12 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 		var err error
 		context := r.Context()
 		if requ_type == "all" {
-			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, type FROM bouquets"
+			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, dominate_color, id_base_color, type FROM bouquets"
 			rows, err = db.QueryContext(context, query)
 		}
 
 		if requ_type == "usual" || requ_type == "special" {
-			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, type FROM bouquets WHERE type = ?"
+			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, dominate_color, id_base_color, type FROM bouquets WHERE type = ?"
 			rows, err = db.QueryContext(context, query, requ_type)
 		}
 
@@ -173,7 +173,8 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 		var bouquets []models.Bouquet
 		for rows.Next() {
 			bouquet := models.Bouquet{}
-			if err := rows.Scan(&bouquet.IDBouquet, &bouquet.Name, &bouquet.Description, &bouquet.Price, &bouquet.ImageUrl, &bouquet.ReserveImageUrl, &bouquet.Type); err != nil {
+			if err := rows.Scan(&bouquet.IDBouquet, &bouquet.Name, &bouquet.Description, &bouquet.Price, &bouquet.ImageUrl,
+				&bouquet.ReserveImageUrl, &bouquet.DominateColor, &bouquet.IDBaseColor, &bouquet.Type); err != nil {
 				return &utils.AppError{
 					Err:     err,
 					Message: "Ошибка чтения данных о товарах",

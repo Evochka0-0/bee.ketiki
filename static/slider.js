@@ -43,6 +43,8 @@ function CreateSlide(bouquet){
     const name = document.createElement('h1');
     name.className = "spacial_bouq_name";
     name.textContent = bouquet.name;
+    console.log(bouquet.dominate_color);
+    name.style.color = bouquet.dominate_color;
 
     const special_buy_button = document.createElement('button');
     special_buy_button.className = "special_buy_buttons";

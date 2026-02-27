@@ -99,7 +99,6 @@ func main() {
 	mux.HandleFunc("/reviews/", utils.ErrorHandler(review_base.ReviewsHandler))           //отзывы
 	mux.HandleFunc("/reviews/access", utils.ErrorHandler(review_base.ReviewAccessCheckHandler))
 	mux.HandleFunc("/order_data/", utils.ErrorHandler(order_base.OrderIdHandler)) // страница заказа
-	mux.HandleFunc("/bouquets_colors", utils.ErrorHandler(bouquet_base.BouquetColors))
 
 	// Создаем файловый сервер, который смотрит в папку "./static"
 	fileServer := http.FileServer(http.Dir("./static"))
