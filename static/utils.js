@@ -54,8 +54,10 @@ export function Cart() {
   const cart_icon = document.getElementById("cart_id");
 
   cart_icon.addEventListener("click", function () {
-    checkAuthorisation("cart.html");
-    //window.location.href = 'cart.html';
+    // убираем проверку авторизации при переходе в корзину
+    // теперь корзина доступна всем checkAuthorisation("cart.html");
+
+    window.location.href = 'cart.html';
   });
 }
 
