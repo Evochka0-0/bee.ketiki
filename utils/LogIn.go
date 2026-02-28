@@ -60,9 +60,15 @@ func AddCookie(operation string, db *sql.DB, id int, w http.ResponseWriter, r *h
 	}
 	http.SetCookie(w, &cookie)
 
-	result_message := fmt.Sprintf("Успешная %s", operation)
+	result_with_id := struct {
+		Result_message string `json:"result_message"`
+		ID_client      int    `json:"id_client"`
+	}{
+		Result_message: fmt.Sprintf("Успешная %s", operation),
+		ID_client:      id,
+	}
 
-	return Form_response(w, result_message, http.StatusOK)
+	return Form_response(w, result_with_id, http.StatusOK)
 }
 
 func (ldb *Base) LogInHandler(w http.ResponseWriter, r *http.Request) *AppError {

@@ -102,12 +102,6 @@ export function DeleteProduct(id_todel) {
 }
 
 export function addToCart(id) {
-  if (!document.cookie.includes("session_token")) {
-    showNotification(
-      "Пожалуйста, зарегестрируйтесь/войдите, чтобы добавить товар в корзину",
-    );
-    return;
-  }
 
   /** @type {Array<{id: number, count: number}>} */
   let cart;

@@ -136,13 +136,72 @@ async function confirmPayment(order_id, payment_ref) {
   return data;
 }
 
-function CreateOrder(cart_data, client_id) {
+async function guestRegistration(){
+  // бля теперь инпуты все опять доставать, заебали
+  const last_name_input = document.getElementById("last_name_input").value;
+  const name_input = document.getElementById("name_input").value;
+  const phone_input = document.getElementById("phone_input").value;
+  const email_input = document.getElementById("email_input").value;
+  const password_input = document.getElementById("password_input").value;
+
+  const clientData = {
+    last_name: last_name_input,
+    first_name: name_input,
+    phone: phone_input,
+    email: email_input,
+    password: password_input
+  };
+
+  let id_new_client;
+
+  try{
+    const response = await fetch('/clients', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(clientData)
+    });
+    if (!response.ok){
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Произошла неизвестная ошибка'); 
+    }
+
+    const data = await response.json();
+    id_new_client = data.id_client;
+        
+  }
+  catch(err){
+    showNotification("Извините, произошла ошибка");
+    console.error(err, err.message);
+    return null;
+  }
+
+  return id_new_client;
+}
+
+/** создаем заказ, обязательно записывая данные покупателя
+ * @param {string | null} cart_data - данные товаров которые лежат в корзине
+ * @param {Object} client_access - гость или уже авторизованный пользователь
+ * @param {number} client_access.id - id пользователя, если 0 значит гость
+ * @param {string} client_access.role - роль (guest или user)
+ */
+async function CreateOrder(cart_data, client_access) {
   const pay_button = document.getElementById("pay_button");
   /** @type {Array<{id_bouquet: number, count: number}>} */
   let products_info;
 
   const data_time = document.getElementById('datetime-local_deadline');
+  let client_id;
   pay_button.addEventListener("click", async () => {
+
+    if(client_access.role == "guest"){
+      //тихая регистрация
+      client_id = await guestRegistration();
+      if (!client_id) return;
+    }else{
+      client_id = client_access.id;
+    }
 
     // дедлайн
     const deadline_value = data_time.value;
@@ -195,22 +254,88 @@ async function loaddataTime(){
 
 }
 
-async function GetIdClient() {
-  let client_id;
-  try {
-    const response = await fetch("/auth_access");
-    if (!response.ok) {
-      throw new Error("Не авторизован");
+async function authAcces(){// при загрузке страницы определяется авторизирован ли пользователь
+// загружается или нет поле для ввода данных
+  //проверка авторизаци
+  /** переменная, в которой записывается, какой пользователь зашел в корзину, гость или уже авторизованный пользователь
+   * используется при оформлении заказа по конопке оплатить, для того чтбы определить, нужна ли тихая регистрация, или покупатель уже авторизован
+   * @type {{id:number, role:string}}*/
+  let client_access = {
+    id: 0,
+    role: "guest"
+  };
+  try{
+    const resp = await fetch("/auth_access");
+    if (!resp.ok){
+      // если гость, загружаем поля для ввода личных данных
+      const right = document.getElementById("right");
+
+      const personal_data_form = document.createElement('form');
+      personal_data_form.id = "personal_data_form";
+
+      const last_name_input = document.createElement('input');
+      last_name_input.id = "last_name_input";
+      last_name_input.type = "text";
+      const ln_label = document.createElement('label');
+      ln_label.for = "last_name_input";
+      ln_label.textContent = "Фамилия";
+
+      const name_input = document.createElement('input');
+      name_input.id = "name_input";
+      name_input.type = "text";
+      const n_label = document.createElement('label');
+      n_label.for = "name_input";
+      n_label.textContent = "Имя";
+
+      const phone_input = document.createElement('input');
+      phone_input.id = "phone_input";
+      phone_input.type = "tel";
+      const p_label = document.createElement('label');
+      p_label.for = "phone_input";
+      p_label.textContent = "Телефон";
+
+      const email_input = document.createElement('input');
+      email_input.id = "email_input";
+      email_input.type = "email";
+      const e_label = document.createElement('label');
+      e_label.for = "email_input";
+      e_label.textContent = "Электронная почта";
+
+      const password_input = document.createElement('input');
+      password_input.id = "password_input";
+      password_input.type = "password";
+      const password_label = document.createElement('label');
+      password_label.for = "password_input";
+      password_label.textContent = "Придумайте пароль";
+
+      personal_data_form.appendChild(ln_label);
+      personal_data_form.appendChild(last_name_input);
+      personal_data_form.appendChild(n_label);
+      personal_data_form.appendChild(name_input);
+      personal_data_form.appendChild(p_label);
+      personal_data_form.appendChild(phone_input);
+      personal_data_form.appendChild(e_label)
+      personal_data_form.appendChild(email_input);
+      personal_data_form.appendChild(password_label);
+      personal_data_form.appendChild(password_input);
+
+      right.prepend(personal_data_form);
+
+      //записываем 0 в id, гость
     }
-    const data = await response.json();
-
-    client_id = data.user_id;
-  } catch (error) {
-    console.error(error);
-    console.log("проверка авторизации при получении id пользователя");
-    window.location.href = "registration.html";
+    // если авторизован, передаем client_id из /auth_acces
+    else{
+      const data = await resp.json();
+      client_access.id = data.user_id;
+      client_access.role = "user";//авторизированный пользователь с id
+    }
+  }catch(err){
+    console.error(err.message);
   }
+  return client_access;
+}
 
+async function GetIdClient() {
   let cart_data = localStorage.getItem("cart");
 
   const cart_main = document.getElementById("cart_main");
@@ -237,7 +362,8 @@ async function GetIdClient() {
   await loadCart(cart_data);
   await loaddataTime();
   Home();
-  CreateOrder(cart_data, client_id);
+  const client_access = await authAcces();
+  await CreateOrder(cart_data, client_access);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
