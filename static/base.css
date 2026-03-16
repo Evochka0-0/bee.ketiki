@@ -369,3 +369,23 @@ main {
 .href_text:hover{
     color: var(--pink-dark);
 }
+
+.modal-window {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    background-image: url("/images/backgr_home.jpg");
+    background-size: cover;
+    
+    backdrop-filter: blur(24px) brightness(1.1);
+    border: var(--cream) 5px solid;
+    border-radius: 10px;
+    
+    padding: 30px;
+    width: fit-content;
+    max-width: 90%;
+    
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+}

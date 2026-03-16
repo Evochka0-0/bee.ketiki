@@ -10,6 +10,7 @@
     align-items: flex-start;
     gap: 40px;
     padding: 40px;
+    padding-top: 25px;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -118,35 +119,35 @@
    ПРАВАЯ КОЛОНКА - ОФОРМЛЕНИЕ ЗАКАЗА
    ============================================ */
 #right {
-    width: 380px;
     min-width: 320px;
     background-color: var(--cream);
     border-radius: 20px;
-    padding: 30px;
+    padding: 15px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     position: sticky; 
-    top: 100px;
+    top: 80px;
+    justify-content: center;
 }
 
 .right_title {
-    margin: 0 0 25px 0;
-    font-size: 1.6rem;
-    color: var(--dark-bg);
+    margin: 0 0 15px 0;
+    font-size: 1.3rem;
+    color: var(--cream);
     text-align: center;
 }
 
 .order_summary {
     background-color: white;
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
 }
 
 .summary_row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 5px 0;
 }
 
 .summary_row:first-child {
@@ -179,22 +180,25 @@
 }
 
 #pay_button {
-    width: 100%;
-    height: 55px;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
+    flex: 1;               /* Кнопка тоже растягивается (будут 50/50 с датой) */
+    height: 45px;          /* Фиксированная высота как у инпута */
+    margin: 0;             /* Убираем маржины */
+    padding: 0 10px;       /* Внутренние отступы */
+    font-size: 0.9rem;     /* Текст чуть меньше, чтобы влез в одну строку */
+    white-space: nowrap;   /* Чтобы текст кнопки не переносился */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .order_info {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 15px 0;
+    padding: 10px 0;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .info_item {
@@ -211,7 +215,7 @@
 
 .offer_text {
     font-size: 0.8rem;
-    color: #999;
+    color: var(--cream);
     text-align: center;
     line-height: 1.5;
     margin: 0;
@@ -257,4 +261,69 @@
     display: none !important;
 }
 
+/* Контейнер формы */
+#personal_data_form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две колонки */
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
+/* Стили для каждой группы (подпись + поле) */
+.form-group {
+    display: flex;
+    flex-direction: column; /* Подпись над полем */
+    gap: 4px;
+}
+
+/* Если нужно, чтобы поле занимало всю ширину (телефон, почта, пароль) */
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+/* Стили элементов внутри группы */
+.form-group label {
+    font-size: 0.85rem;
+    color: var(--cream);
+    font-weight: 600;
+}
+
+.form-group input {
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: white;
+    font-size: 1rem;
+    width: 100%;
+}
+
+#deadline_choose{
+   flex: 1;               /* Занимает всё доступное место слева */
+    margin: 0;
+}
+
+#deadline_choose h3 {
+    font-size: 0.85rem;    /* Делаем заголовок чуть меньше для экономии места */
+    margin-bottom: 5px;
+    color: var(--cream);
+    text-align: left;      /* Выравнивание текста заголовка по левому краю */
+}
+
+#datetime-local_deadline {
+    width: 100%;           /* Растягивается на весь свой контейнер */
+    height: 45px;          /* Совпадаем по высоте с кнопкой */
+    padding: 8px;
+    border-radius: 12px;
+    border: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    margin: 0;             /* Убираем лишние отступы */
+}
+
+#data_and_pay{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end; /* ВАЖНО: выравнивает кнопку по нижней линии поля ввода */
+    gap: 12px;             /* Расстояние между элементами */
+    margin-bottom: 15px;
+}

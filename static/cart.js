@@ -273,52 +273,32 @@ async function authAcces(){// при загрузке страницы опре�
       const personal_data_form = document.createElement('form');
       personal_data_form.id = "personal_data_form";
 
-      const last_name_input = document.createElement('input');
-      last_name_input.id = "last_name_input";
-      last_name_input.type = "text";
-      const ln_label = document.createElement('label');
-      ln_label.for = "last_name_input";
-      ln_label.textContent = "Фамилия";
 
-      const name_input = document.createElement('input');
-      name_input.id = "name_input";
-      name_input.type = "text";
-      const n_label = document.createElement('label');
-      n_label.for = "name_input";
-      n_label.textContent = "Имя";
+      function createFieldGroup(id, type, labelText, isFullWidth = false) {
+        const group = document.createElement('div');
+        group.className = 'form-group';
+        if (isFullWidth) group.classList.add('full-width');
 
-      const phone_input = document.createElement('input');
-      phone_input.id = "phone_input";
-      phone_input.type = "tel";
-      const p_label = document.createElement('label');
-      p_label.for = "phone_input";
-      p_label.textContent = "Телефон";
+        const label = document.createElement('label');
+        label.for = id;
+        label.textContent = labelText;
 
-      const email_input = document.createElement('input');
-      email_input.id = "email_input";
-      email_input.type = "email";
-      const e_label = document.createElement('label');
-      e_label.for = "email_input";
-      e_label.textContent = "Электронная почта";
+        const input = document.createElement('input');
+        input.id = id;
+        input.type = type;
+        input.required = true; // полезно добавить
 
-      const password_input = document.createElement('input');
-      password_input.id = "password_input";
-      password_input.type = "password";
-      const password_label = document.createElement('label');
-      password_label.for = "password_input";
-      password_label.textContent = "Придумайте пароль";
+        group.appendChild(label);
+        group.appendChild(input);
+        return group;
+      }
 
-      personal_data_form.appendChild(ln_label);
-      personal_data_form.appendChild(last_name_input);
-      personal_data_form.appendChild(n_label);
-      personal_data_form.appendChild(name_input);
-      personal_data_form.appendChild(p_label);
-      personal_data_form.appendChild(phone_input);
-      personal_data_form.appendChild(e_label)
-      personal_data_form.appendChild(email_input);
-      personal_data_form.appendChild(password_label);
-      personal_data_form.appendChild(password_input);
-
+      // Добавляем поля группами
+      personal_data_form.appendChild(createFieldGroup("last_name_input", "text", "Фамилия"));
+      personal_data_form.appendChild(createFieldGroup("name_input", "text", "Имя"));
+      personal_data_form.appendChild(createFieldGroup("phone_input", "tel", "Телефон", true)); // На всю ширину
+      personal_data_form.appendChild(createFieldGroup("email_input", "email", "Электронная почта", true)); // На всю ширину
+      personal_data_form.appendChild(createFieldGroup("password_input", "password", "Придумайте пароль", true)); // На всю ширину
       right.prepend(personal_data_form);
 
       //записываем 0 в id, гость
