@@ -6,6 +6,244 @@ const delete_button = document.getElementById("delete_button");
 const name_container = document.getElementById("name_product_container");
 
 let currentId;
+/**
+ * 
+ * @param {number} 
+ * @param {number} 
+ * @returns {Promise<string>} 
+ */
+async function initiatePayment(order_id, amount) {
+    const response = await fetch("/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_order: order_id, amount: amount })
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Ошибка инициирования оплаты: " + response.status);
+    }
+
+    const data = await response.json();
+    if (data.status !== "pending") {
+        throw new Error("Оплата уже обработана");
+    }
+    return data.payment_ref;
+}
+
+/**
+ * 
+ * @param {number} user_id 
+ * @param {number} id_bouquet 
+ * @param {number} price 
+ * @param {string} deadline 
+ */
+async function createQuickOrder(user_id, id_bouquet, price, deadline) {
+    const orderData = {
+        client_id: user_id,
+        total_cost: price,
+        deadline: deadline,
+        items: [{ id_bouquet: id_bouquet, count: 1 }]
+    };
+
+    try {
+        showNotification("Оформляем заказ...");
+        
+        const orderResponse = await fetch("/orders", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!orderResponse.ok) {
+            const errorData = await orderResponse.json();
+            throw new Error(errorData.error || "Ошибка создания заказа");
+        }
+
+        const orderDataResponse = await orderResponse.json();
+        
+        const payment_ref = await initiatePayment(orderDataResponse.id_order, price);
+        
+        window.location.replace(`/payment.html?id_order=${orderDataResponse.id_order}&amount=${price}&payment_ref=${payment_ref}`);
+        
+    } catch (error) {
+        showNotification("Ошибка при оформлении заказа: " + error.message);
+        console.error("Ошибка createQuickOrder:", error);
+    }
+}
+
+function askForDeadlineAndCreate(user_id, id_bouquet, price) {
+    const modal = document.createElement('div');
+    modal.id = 'quick-order-deadline-modal';
+    modal.className = 'modal-overlay';
+    
+    modal.innerHTML = `
+        <div class="modal-window">
+            <button id="close-deadline-modal" class="close-btn">✕</button>
+            <h2>Выберите дату самовывоза</h2>
+            <div class="deadline-selector">
+                <input type="datetime-local" id="quick-order-deadline" class="deadline-input">
+                <button id="confirm-deadline-btn" class="buy_buttons">Подтвердить и оплатить</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const deadlineInput = document.getElementById('quick-order-deadline');
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    const minDateTime = now.toISOString().slice(0, 16);
+    deadlineInput.min = minDateTime;
+    deadlineInput.value = minDateTime;
+    
+    document.getElementById('confirm-deadline-btn').addEventListener('click', () => {
+        const deadline = deadlineInput.value;
+        if (!deadline) {
+            showNotification("Выберите дату и время");
+            return;
+        }
+        
+        document.body.removeChild(modal);
+        createQuickOrder(user_id, id_bouquet, price, deadline);
+    });
+    
+    document.getElementById('close-deadline-modal').addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+function showGuestForm(id_bouquet, price, productName) {
+    const modal = document.createElement('div');
+    modal.id = 'quick-order-guest-modal';
+    modal.className = 'modal-overlay';
+    
+    modal.innerHTML = `
+        <div class="modal-window">
+            <button id="close-guest-modal" class="close-btn">✕</button>
+            <h2>Оформление заказа</h2>
+            <p class="product-info">Товар: <strong>${productName}</strong></p>
+            <p class="product-info">Сумма: <strong>${price.toLocaleString("ru-RU")} ₽</strong></p>
+            
+            <form id="quick-guest-form" class="guest-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="guest-lastname">Фамилия</label>
+                        <input type="text" id="guest-lastname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guest-firstname">Имя</label>
+                        <input type="text" id="guest-firstname" required>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="guest-phone">Телефон</label>
+                    <input type="tel" id="guest-phone" placeholder="+7 000 000 00 00" required>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="guest-email">Электронная почта</label>
+                    <input type="email" id="guest-email" placeholder="example@mail.com" required>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="guest-deadline">Дата самовывоза</label>
+                    <input type="datetime-local" id="guest-deadline" required>
+                </div>
+                
+                <button type="submit" class="buy_buttons">Зарегистрироваться и оплатить</button>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const deadlineInput = document.getElementById('guest-deadline');
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    const minDateTime = now.toISOString().slice(0, 16);
+    deadlineInput.min = minDateTime;
+    deadlineInput.value = minDateTime;
+    
+    document.getElementById('quick-guest-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const clientData = {
+            last_name: document.getElementById('guest-lastname').value,
+            first_name: document.getElementById('guest-firstname').value,
+            phone: document.getElementById('guest-phone').value,
+            email: document.getElementById('guest-email').value,
+            password: 'temp_' + Math.random().toString(36).slice(2, 10)
+        };
+        
+        const deadline = document.getElementById('guest-deadline').value;
+        
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Регистрируем...";
+        
+        try {
+            const regResponse = await fetch('/clients', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(clientData)
+            });
+            
+            if (!regResponse.ok) {
+                const errorData = await regResponse.json();
+                throw new Error(errorData.error || 'Ошибка регистрации');
+            }
+            
+            const regData = await regResponse.json();
+            
+            document.body.removeChild(modal);
+            
+            await createQuickOrder(regData.id_client, id_bouquet, price, deadline);
+            
+        } catch (error) {
+            showNotification('Ошибка: ' + error.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            console.error('Ошибка регистрации:', error);
+        }
+    });
+    
+    document.getElementById('close-guest-modal').addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+async function handleBuyNow() {
+    const params = new URLSearchParams(document.location.search);
+    const id_bouquet = Number(params.get("id"));
+    
+    if (!id_bouquet) {
+        showNotification("Ошибка: не указан товар");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/bouquets/${id_bouquet}`);
+        if (!response.ok) throw new Error("Товар не найден");
+        
+        const product = await response.json();
+        
+        const authResponse = await fetch("/auth_access");
+        
+        if (authResponse.ok) {
+            const userData = await authResponse.json();
+            askForDeadlineAndCreate(userData.user_id, id_bouquet, product.price);
+        } else {
+            showGuestForm(id_bouquet, product.price, product.name);
+        }
+        
+    } catch (error) {
+        showNotification("Ошибка загрузки товара");
+        console.error(error);
+    }
+}
 
 async function ReviewWriter(currentId){
   // проверяем доступ к написанию отзыва
@@ -30,7 +268,7 @@ async function ReviewWriter(currentId){
   } catch(err){
     console.error("Ошибка проверки доступа", err);
   }
-  /**@type {HTMLSelectElement} */
+  
   const reviw_select = document.getElementById('reviw_select');
   /** @type {HTMLTextAreaElement | null} */
   const textarea = document.getElementById('textarea');
@@ -54,13 +292,13 @@ async function ReviewWriter(currentId){
       showNotification("Не забудьте поставить оценку");
       return;
     }
-    //данные для отпарвки на сервер
+    
     let data = {
       id_bouquet : parseInt(id_bouquet),
       message: message,
       grade: grade
     }
-    // теперь отправляем данные на сервер POST review
+    
     fetch("/reviews/", {
       method: "POST",
       headers: {
@@ -203,7 +441,7 @@ function loadInfo() {
 
 
 function updateQuantityInfo(id) {
-  const cartData = getCartData(); // Должен возвращать Map (id -> count)
+  const cartData = getCartData();
   let count = cartData.get(id) || 0;
 
   if (count > 0) {
@@ -249,4 +487,18 @@ document.addEventListener("DOMContentLoaded", () => {
   GetIdClient();
   Home();
   Cart();
+  
+  const buyNowBtn = document.getElementById("buy_now_button");
+  if (buyNowBtn) {
+    buyNowBtn.addEventListener("click", handleBuyNow);
+  }
+  
+  const deadlineInput = document.getElementById('datetime-local_deadline');
+  if (deadlineInput) {
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    const minDateTime = now.toISOString().slice(0, 16);
+    deadlineInput.min = minDateTime;
+    deadlineInput.value = minDateTime;
+  }
 });
