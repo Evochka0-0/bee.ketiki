@@ -7,7 +7,6 @@ type Bouquet struct {
 	Price           float64 `json:"price"`
 	ImageUrl        string  `json:"image_url"`
 	ReserveImageUrl string  `json:"reserve_image_url"`
-	DominateColor   string  `json:"dominate_color"`
 	IDBaseColor     int     `json:"id_base_color"`
 	Type            string  `json:"type"`
 }
