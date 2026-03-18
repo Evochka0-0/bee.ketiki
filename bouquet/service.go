@@ -41,7 +41,7 @@ func (b BouquetBase) ListBouquetsHandler(w http.ResponseWriter, r *http.Request)
 
 		var query_elements []string
 		var query_questions []string
-		query_begin := "SELECT * FROM bouquets WHERE id_bouquet IN ("
+		query_begin := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets WHERE id_bouquet IN ("
 		query_elements = append(query_elements, query_begin)
 
 		for i := 0; i < len(list_id.IDs); i++ {
@@ -76,7 +76,7 @@ func (b BouquetBase) ListBouquetsHandler(w http.ResponseWriter, r *http.Request)
 
 		for rows.Next() {
 			bouquet := models.Bouquet{}
-			err := rows.Scan(&bouquet.IDBouquet, &bouquet.Name, &bouquet.Description, &bouquet.Price, &bouquet.ImageUrl, &bouquet.ReserveImageUrl, &bouquet.DominateColor, &bouquet.IDBaseColor, &bouquet.Type)
+			err := rows.Scan(&bouquet.IDBouquet, &bouquet.Name, &bouquet.Description, &bouquet.Price, &bouquet.ImageUrl, &bouquet.ReserveImageUrl, &bouquet.IDBaseColor, &bouquet.Type)
 			if err != nil {
 				return &utils.AppError{
 					Err:     err,
@@ -113,8 +113,8 @@ func (b BouquetBase) BouquetIdHandler(w http.ResponseWriter, r *http.Request) *u
 	case "GET":
 		data := models.Bouquet{}
 		context := r.Context()
-		query := "SELECT * FROM bouquets WHERE id_bouquet = ?"
-		err := db.QueryRowContext(context, query, id).Scan(&data.IDBouquet, &data.Name, &data.Description, &data.Price, &data.ImageUrl, &data.ReserveImageUrl, &data.DominateColor, &data.IDBaseColor, &data.Type)
+		query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets WHERE id_bouquet = ?"
+		err := db.QueryRowContext(context, query, id).Scan(&data.IDBouquet, &data.Name, &data.Description, &data.Price, &data.ImageUrl, &data.ReserveImageUrl, &data.IDBaseColor, &data.Type)
 		if err != nil {
 			return &utils.AppError{
 				Err:     err,
@@ -151,12 +151,12 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 		var err error
 		context := r.Context()
 		if requ_type == "all" {
-			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, dominate_color, id_base_color, type FROM bouquets"
+			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets"
 			rows, err = db.QueryContext(context, query)
 		}
 
 		if requ_type == "usual" || requ_type == "special" {
-			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, dominate_color, id_base_color, type FROM bouquets WHERE type = ?"
+			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets WHERE type = ?"
 			rows, err = db.QueryContext(context, query, requ_type)
 		}
 
@@ -174,7 +174,7 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 		for rows.Next() {
 			bouquet := models.Bouquet{}
 			if err := rows.Scan(&bouquet.IDBouquet, &bouquet.Name, &bouquet.Description, &bouquet.Price, &bouquet.ImageUrl,
-				&bouquet.ReserveImageUrl, &bouquet.DominateColor, &bouquet.IDBaseColor, &bouquet.Type); err != nil {
+				&bouquet.ReserveImageUrl, &bouquet.IDBaseColor, &bouquet.Type); err != nil {
 				return &utils.AppError{
 					Err:     err,
 					Message: "Ошибка чтения данных о товарах",
