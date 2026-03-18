@@ -47,6 +47,7 @@
 .spacial_bouq_name{
     font-family: "special", serif;
     font-size: 4rem;
+    color: var(--dark-red);
 }
 
 #arrows{

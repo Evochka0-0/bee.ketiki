@@ -32,6 +32,7 @@
     --dark-bg: rgba(52, 51, 68, 1);
     --cream: rgba(254, 236, 222, 1);
     --red: rgba(150, 24, 27, 1);
+    --dark-red: rgba(149, 1, 48, 1);
     --pink-dark: rgba(190, 102, 134, 1);
     --pink-light: rgba(255, 163, 197, 1);
     --light-bg: rgb(85, 84, 103);
@@ -65,7 +66,7 @@ header {
     align-items: center;
     gap: 20px;
     padding: 15px 30px;
-    background: radial-gradient(circle at center, rgba(149, 1, 48, 1), var(--pink));
+    background: radial-gradient(circle at center, var(--dark-red), var(--pink));
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
