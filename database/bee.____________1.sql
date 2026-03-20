@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 18 2026 г., 15:50
+-- Время создания: Мар 20 2026 г., 22:44
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -63,31 +63,34 @@ CREATE TABLE IF NOT EXISTS `bouquets` (
   `reserve_image_url` varchar(500) NOT NULL COMMENT 'дополнительная картинка для витринных букетов',
   `id_base_color` int(11) NOT NULL,
   `type` varchar(50) NOT NULL DEFAULT 'usual',
-  `occasion` varchar(255) NOT NULL COMMENT 'назначение',
+  `id_occasion` int(11) NOT NULL COMMENT 'назначение',
   `id_structure` int(11) NOT NULL,
   PRIMARY KEY (`id_bouquet`),
   KEY `id_base_color` (`id_base_color`),
-  KEY `occasion` (`occasion`(191))
+  KEY `occasion` (`id_occasion`),
+  KEY `price` (`price`,`id_base_color`,`id_occasion`),
+  KEY `id_occasion` (`id_occasion`),
+  KEY `id_occasion_2` (`id_occasion`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=14 ;
 
 --
 -- Дамп данных таблицы `bouquets`
 --
 
-INSERT INTO `bouquets` (`id_bouquet`, `name`, `description`, `price`, `image_url`, `reserve_image_url`, `id_base_color`, `type`, `occasion`, `id_structure`) VALUES
-(1, 'Нежные пионы', 'Пышный букет из нежных пионов, обернутые золотистой упаковочной бумагой', '2500.00', '/images/piones.png', '', 5, 'usual', '', 0),
-(2, 'Летнее небо', 'Авторский букет из нежных ромашек и ароматной лаванды.', '5100.00', '/images/romashki_lavanda.png', '', 6, 'usual', '', 0),
-(3, 'Альстромерии', 'Яркий и стойкий букет из 9 розовых альстромерий.', '3500.00', '/images/alstromerii.png', '', 5, 'usual', '', 0),
-(4, 'Белоснежный каприз', 'Пышный букет из крупных белых хризантем с кремово-белой лентой.', '2600.00', '/images/white.png', '', 6, 'usual', '', 0),
-(5, 'Розочки', 'Кустовые розы в классической крафтовой упаковке с красной лентой.', '3500.00', '/images/roses_craft.png', '', 5, 'usual', '', 0),
-(6, 'Орхидеи с жемчугом', 'Пышный букет из ярких фуксийно-розовых орхидей в подарочной упаковке.', '4000.00', '/images/fuksia_orhideia.png', '', 5, 'usual', '', 0),
-(7, 'Тюльпаны и эустома', 'Утонченный и элегантный минималистичный букет из нежных тюльпанов.', '2000.00', '/images/tulpani.png', '', 5, 'usual', '', 0),
-(8, 'Изюминка', 'Авторский, фактурный букет, который относится к современному стилю.', '5500.00', '/images/extra.png', '', 3, 'usual', '', 0),
-(9, 'Гжель с жемчугом', 'Фактурный букет с васильками, хлопковыми коробочками и жемчугом.', '3500.00', '/images/Vasilki.png', '', 8, 'usual', '', 0),
-(10, 'Хрустальное изящество', 'Букет из нежно-розовых калл, обернутый в белую матовую бумагу.', '2500.00', '/images/hrustal.png', '', 5, 'usual', '', 0),
-(11, 'Французские розы', 'Букет из изысканных французских садовых роз, обернутый в стильный крафт.', '6500.00', '/images/frahc_roses.png', '', 5, 'usual', '', 0),
-(12, 'Для зайчиков', 'Композиция из роз и лилий, украшенная зефиром и бусинами', '8500.00', '/images/carrots.png', '/images/carrots-0.png', 7, 'special', '', 0),
-(13, 'Ко дню влюбленных', 'Букет из хризантем и свежей клубники для вашей второй половинки', '8000.00', '/images/strowberryes.png', '/images/strowberryes-0.png', 2, 'special', '', 0);
+INSERT INTO `bouquets` (`id_bouquet`, `name`, `description`, `price`, `image_url`, `reserve_image_url`, `id_base_color`, `type`, `id_occasion`, `id_structure`) VALUES
+(1, 'Нежные пионы', 'Пышный букет из нежных пионов, обернутые золотистой упаковочной бумагой', '2500.00', '/images/piones.png', '', 5, 'usual', 0, 0),
+(2, 'Летнее небо', 'Авторский букет из нежных ромашек и ароматной лаванды.', '5100.00', '/images/romashki_lavanda.png', '', 6, 'usual', 0, 0),
+(3, 'Альстромерии', 'Яркий и стойкий букет из 9 розовых альстромерий.', '3500.00', '/images/alstromerii.png', '', 5, 'usual', 0, 0),
+(4, 'Белоснежный каприз', 'Пышный букет из крупных белых хризантем с кремово-белой лентой.', '2600.00', '/images/white.png', '', 6, 'usual', 1, 0),
+(5, 'Розочки', 'Кустовые розы в классической крафтовой упаковке с красной лентой.', '3500.00', '/images/roses_craft.png', '', 5, 'usual', 0, 0),
+(6, 'Орхидеи с жемчугом', 'Пышный букет из ярких фуксийно-розовых орхидей в подарочной упаковке.', '4000.00', '/images/fuksia_orhideia.png', '', 5, 'usual', 0, 0),
+(7, 'Тюльпаны и эустома', 'Утонченный и элегантный минималистичный букет из нежных тюльпанов.', '2000.00', '/images/tulpani.png', '', 5, 'usual', 0, 0),
+(8, 'Изюминка', 'Авторский, фактурный букет, который относится к современному стилю.', '5500.00', '/images/extra.png', '', 3, 'usual', 0, 0),
+(9, 'Гжель с жемчугом', 'Фактурный букет с васильками, хлопковыми коробочками и жемчугом.', '3500.00', '/images/Vasilki.png', '', 8, 'usual', 0, 0),
+(10, 'Хрустальное изящество', 'Букет из нежно-розовых калл, обернутый в белую матовую бумагу.', '2500.00', '/images/hrustal.png', '', 5, 'usual', 1, 0),
+(11, 'Французские розы', 'Букет из изысканных французских садовых роз, обернутый в стильный крафт.', '6500.00', '/images/frahc_roses.png', '', 5, 'usual', 0, 0),
+(12, 'Для зайчиков', 'Композиция из роз и лилий, украшенная зефиром и бусинами', '8500.00', '/images/carrots.png', '/images/carrots-0.png', 7, 'special', 0, 0),
+(13, 'Ко дню влюбленных', 'Букет из хризантем и свежей клубники для вашей второй половинки', '8000.00', '/images/strowberryes.png', '/images/strowberryes-0.png', 2, 'special', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -197,6 +200,27 @@ INSERT INTO `flowers` (`id_flower`, `name_flower`) VALUES
 (12, 'Лилии'),
 (13, 'Лаванда'),
 (14, 'Гвоздики');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `occasion`
+--
+
+CREATE TABLE IF NOT EXISTS `occasion` (
+  `id_occassion` int(11) NOT NULL AUTO_INCREMENT,
+  `ocassion_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_occassion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=4 ;
+
+--
+-- Дамп данных таблицы `occasion`
+--
+
+INSERT INTO `occasion` (`id_occassion`, `ocassion_name`) VALUES
+(0, 'без назначения'),
+(1, 'Свадебный'),
+(2, 'День всех влюбленных');
 
 -- --------------------------------------------------------
 
@@ -406,7 +430,7 @@ INSERT INTO `sessions` (`id_session`, `id_client`, `token`, `expires_at`) VALUES
 (60, 5, '58221658-4448-45c4-9b07-6443f35df054', '2026-03-16 09:56:22'),
 (61, 23, '371e748a-4a3e-439a-8b5b-fa2553296f58', '2026-03-16 16:12:44'),
 (62, 5, 'c3bc88fd-21e6-4771-881f-f57e8a562c43', '2026-03-16 16:23:53'),
-(63, 5, '7a6b80aa-e16d-4d9c-921e-4690c0cac76c', '2026-03-19 07:09:32');
+(63, 5, '7a6b80aa-e16d-4d9c-921e-4690c0cac76c', '2026-03-18 07:57:29');
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -416,14 +440,15 @@ INSERT INTO `sessions` (`id_session`, `id_client`, `token`, `expires_at`) VALUES
 -- Ограничения внешнего ключа таблицы `bouquets`
 --
 ALTER TABLE `bouquets`
+  ADD CONSTRAINT `bouquets_ibfk_2` FOREIGN KEY (`id_occasion`) REFERENCES `occasion` (`id_occassion`),
   ADD CONSTRAINT `bouquets_ibfk_1` FOREIGN KEY (`id_base_color`) REFERENCES `base_color_palette` (`id_base_color`);
 
 --
 -- Ограничения внешнего ключа таблицы `bouquet_structure`
 --
 ALTER TABLE `bouquet_structure`
-  ADD CONSTRAINT `bouquet_structure_ibfk_2` FOREIGN KEY (`id_flower`) REFERENCES `flowers` (`id_flower`),
-  ADD CONSTRAINT `bouquet_structure_ibfk_1` FOREIGN KEY (`id_bouquet`) REFERENCES `bouquets` (`id_bouquet`);
+  ADD CONSTRAINT `bouquet_structure_ibfk_1` FOREIGN KEY (`id_bouquet`) REFERENCES `bouquets` (`id_bouquet`),
+  ADD CONSTRAINT `bouquet_structure_ibfk_2` FOREIGN KEY (`id_flower`) REFERENCES `flowers` (`id_flower`);
 
 --
 -- Ограничения внешнего ключа таблицы `orderitems`
