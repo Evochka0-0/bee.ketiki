@@ -133,6 +133,18 @@ func (b BouquetBase) BouquetIdHandler(w http.ResponseWriter, r *http.Request) *u
 	}
 }
 
+//переписываем для фильтрации
+// юудем использовать запрос
+/*
+SELECT b.`id_bouquet`, b.`name`, b.`description`, b.`price`, b.`image_url`, b.`reserve_image_url`, color_p.`hex`, color_p.`color_name`, b.`type`, o.`occasion_name`, GROUP_CONCAT(f.name_flower) as flowers_list
+FROM `bouquets` b
+INNER JOIN `base_color_palette` color_p ON  b.`id_base_color` = color_p.`id_base_color`
+INNER JOIN `occasion` o  ON b.`id_occasion` = o.`id_occasion`
+INNER JOIN `bouquet_structure` s ON b.`id_bouquet` = s.`id_bouquet`
+INNER JOIN `flowers` f ON s.`id_flower` = f.`id_flower`
+WHERE ...
+GROUP BY b.`id_bouquet`
+*/
 func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *utils.AppError {
 	db := b.BDB.DB
 	switch r.Method {
@@ -147,18 +159,89 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 			}
 		}
 
+		//параметры для фильтрации
+		colors_list := r.URL.Query()["color_names"]
+		occasions_list := r.URL.Query()["occasion_names"]
+		flowers_list := r.URL.Query()["flowers_names"]
+		maxPrice := r.URL.Query().Get("price")
+		// если пользователь отметил галочками несколько цветов,
+		// например Ромашки, Розы, то ему надо выдавать букеты с Ромашками, букеты с Розами, а не букеты в которых обязатеольно И Ромашки И розы
+
 		var rows *sql.Rows
 		var err error
 		context := r.Context()
-		if requ_type == "all" {
-			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets"
-			rows, err = db.QueryContext(context, query)
-		}
+
+		//query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets"
+		base_query := "SELECT b.id_bouquet, b.name, b.description, b.price, b.image_url, b.reserve_image_url, color_p.hex, color_p.color_name, b.type, o.occasion_name," +
+			" GROUP_CONCAT(f.name_flower) as flowers_list" +
+			" FROM bouquets b" +
+			" LEFT JOIN base_color_palette color_p ON  b.id_base_color = color_p.id_base_color" +
+			" LEFT JOIN occasion o  ON b.id_occasion = o.id_occasion" +
+			" LEFT JOIN bouquet_structure s ON b.id_bouquet = s.id_bouquet" +
+			" LEFT JOIN flowers f ON s.id_flower = f.id_flower"
+
+		// добавляем where по параметрам
+		/* WHERE ...*/
+		var where_conditions []string
+		var queryArgs []any
 
 		if requ_type == "usual" || requ_type == "special" {
-			query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets WHERE type = ?"
-			rows, err = db.QueryContext(context, query, requ_type)
+			whereTypestr := "b.type = ?"
+			where_conditions = append(where_conditions, whereTypestr)
+			queryArgs = append(queryArgs, requ_type)
 		}
+
+		if len(colors_list) > 0 {
+			var colors []string
+			colors_condition := "color_p.color_name IN ("
+			for i := 0; i < len(colors_list); i++ {
+				colors = append(colors, "?")
+				queryArgs = append(queryArgs, colors_list[i])
+			}
+			fullColors := colors_condition + strings.Join(colors, ", ") + ")"
+			where_conditions = append(where_conditions, fullColors)
+		}
+
+		if len(occasions_list) > 0 {
+			var occasions []string
+			occasions_condition := "o.occasion_name IN ("
+			for i := 0; i < len(occasions_list); i++ {
+				occasions = append(occasions, "?")
+				queryArgs = append(queryArgs, occasions_list[i])
+			}
+			fullOccasions := occasions_condition + strings.Join(occasions, ", ") + ")"
+			where_conditions = append(where_conditions, fullOccasions)
+
+		}
+
+		if len(flowers_list) > 0 {
+			var flowers []string
+			flowers_condition := "f.name_flower IN ("
+			for i := 0; i < len(flowers_list); i++ {
+				flowers = append(flowers, "?")
+				queryArgs = append(queryArgs, flowers_list[i])
+			}
+			fullFlowers := flowers_condition + strings.Join(flowers, ", ") + ")"
+			where_conditions = append(where_conditions, fullFlowers)
+		}
+
+		var price_condition string = ""
+		if maxPrice != "" {
+			price_condition = "b.price <= ?"
+			queryArgs = append(queryArgs, maxPrice)
+		}
+
+		ending := " GROUP BY b.id_bouquet " // но если в массиве условий нет условия для фильтрации по цветам то эту часть вставлять не нужно
+		fullQuery := base_query + ending
+		// если массив условий не пустой, собиарем полностью
+		if len(where_conditions) > 0 {
+			whereQueryes := strings.Join(where_conditions, " OR ")
+			if maxPrice != "" {
+				whereQueryes += " AND " + price_condition
+			}
+			fullQuery = base_query + " WHERE " + whereQueryes + ending
+		}
+		rows, err = db.QueryContext(context, fullQuery, queryArgs...)
 
 		if err != nil {
 			message := fmt.Sprintf("Ошибка SQL: %s", err)
@@ -170,11 +253,11 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 		}
 
 		defer rows.Close()
-		var bouquets []models.Bouquet
+		bouquets := []models.BouquetForFilters{}
 		for rows.Next() {
-			bouquet := models.Bouquet{}
+			bouquet := models.BouquetForFilters{}
 			if err := rows.Scan(&bouquet.IDBouquet, &bouquet.Name, &bouquet.Description, &bouquet.Price, &bouquet.ImageUrl,
-				&bouquet.ReserveImageUrl, &bouquet.IDBaseColor, &bouquet.Type); err != nil {
+				&bouquet.ReserveImageUrl, &bouquet.ColorHex, &bouquet.ColorName, &bouquet.Type, &bouquet.OccasionName, &bouquet.FlowersList); err != nil {
 				return &utils.AppError{
 					Err:     err,
 					Message: "Ошибка чтения данных о товарах",
@@ -245,4 +328,52 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 		}
 
 	}
+}
+
+func (b BouquetBase) MaxMinPricesBouquetsHandler(w http.ResponseWriter, r *http.Request) *utils.AppError {
+	if r.Method != "GET" {
+		return &utils.AppError{
+			Err:     errors.New("MethodNotAllowed"),
+			Message: "Метод не поддерживается",
+			Code:    http.StatusMethodNotAllowed,
+		}
+	}
+
+	db := b.BDB.DB
+	context := r.Context()
+	query := "SELECT MIN(price) AS min_price, MAX(price) AS max_price FROM bouquets"
+
+	var minPrice sql.NullFloat64
+	var maxPrice sql.NullFloat64
+	err := db.QueryRowContext(context, query).Scan(&minPrice, &maxPrice)
+
+	if err != nil {
+		message := fmt.Sprintf("Ошибка SQL: %s", err)
+		return &utils.AppError{
+			Err:     err,
+			Message: message,
+			Code:    http.StatusInternalServerError,
+		}
+	}
+
+	// Извлекаем "чистое" число для JSON
+	finalMinPrice := 0.0
+	if minPrice.Valid {
+		finalMinPrice = minPrice.Float64
+	}
+
+	finalMaxPrice := 0.0
+	if maxPrice.Valid {
+		finalMaxPrice = maxPrice.Float64
+	}
+
+	result := struct {
+		MaxPrice float64 `json:"maxPrice"`
+		MinPrice float64 `json:"minPrice"`
+	}{
+		MaxPrice: finalMaxPrice,
+		MinPrice: finalMinPrice,
+	}
+
+	return utils.Form_response(w, result, http.StatusOK)
 }

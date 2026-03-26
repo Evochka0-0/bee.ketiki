@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 20 2026 г., 22:44
+-- Время создания: Мар 26 2026 г., 20:25
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `base_color_palette` (
   `id_base_color` int(11) NOT NULL AUTO_INCREMENT,
   `hex` varchar(7) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `color_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_base_color`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=10 ;
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `base_color_palette` (
 -- Дамп данных таблицы `base_color_palette`
 --
 
-INSERT INTO `base_color_palette` (`id_base_color`, `hex`, `name`) VALUES
+INSERT INTO `base_color_palette` (`id_base_color`, `hex`, `color_name`) VALUES
 (1, 'FF0000', 'не указан'),
 (2, 'FF0000', 'красный'),
 (3, '4CB522', 'зеленый'),
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   PRIMARY KEY (`id_client`),
   UNIQUE KEY `phone` (`phone`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=25 ;
 
 --
 -- Дамп данных таблицы `clients`
@@ -167,7 +167,8 @@ INSERT INTO `clients` (`id_client`, `last_name`, `first_name`, `phone`, `email`,
 (20, 'Гостев', 'Гость', '+79608208773', 'gostev@gmail.com', '$2a$10$sUEmqVkI7J5CR3xzxE0H0uAjHWpnP8JhCZTqWRYkidysfOoFYRIGG', 'user'),
 (21, 'Eva', 'Димоооооооон', '+78005553539', 'zhuzh432353@gmail.com', '$2a$10$UziF8pzqpEVAcz2s6q6gKOT83tPX6Vh9.N6QZ4UlEXgHepKNidALS', 'user'),
 (22, 'Ekkkkka', 'Димоооооооон', '+71456781122', 'zhu2222v353@gmail.com', '$2a$10$Cus.syp58EmhWq.pddNuIes.OUiAQNQI44Ghqb7SaUiBuWQGOffm.', 'user'),
-(23, 'Шелепаева', 'Еварр', '+79994445511', 'zhuzh5555ev353@gmail.com', '$2a$10$IvHvovUP0erQoqL9/eOppOryZ8dXzN2txK8kMPKvDvPwysQx0Mk/q', 'user');
+(23, 'Шелепаева', 'Еварр', '+79994445511', 'zhuzh5555ev353@gmail.com', '$2a$10$IvHvovUP0erQoqL9/eOppOryZ8dXzN2txK8kMPKvDvPwysQx0Mk/q', 'user'),
+(24, 'Шепелева', 'Дина', '89277538304', 'sepelevadina17@gmail.ru', '$2a$10$DE/r6gYgnE4D40eJXcIoQO08ZNpv/RoBZlnIzk/hZCSR0kJ5KbrWa', 'user');
 
 -- --------------------------------------------------------
 
@@ -208,16 +209,16 @@ INSERT INTO `flowers` (`id_flower`, `name_flower`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `occasion` (
-  `id_occassion` int(11) NOT NULL AUTO_INCREMENT,
-  `ocassion_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_occassion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=4 ;
+  `id_occasion` int(11) NOT NULL AUTO_INCREMENT,
+  `occasion_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_occasion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Дамп данных таблицы `occasion`
 --
 
-INSERT INTO `occasion` (`id_occassion`, `ocassion_name`) VALUES
+INSERT INTO `occasion` (`id_occasion`, `occasion_name`) VALUES
 (0, 'без назначения'),
 (1, 'Свадебный'),
 (2, 'День всех влюбленных');
@@ -410,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   PRIMARY KEY (`id_session`),
   UNIQUE KEY `token` (`token`),
   KEY `fk_sessions_client` (`id_client`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=64 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=65 ;
 
 --
 -- Дамп данных таблицы `sessions`
@@ -430,7 +431,8 @@ INSERT INTO `sessions` (`id_session`, `id_client`, `token`, `expires_at`) VALUES
 (60, 5, '58221658-4448-45c4-9b07-6443f35df054', '2026-03-16 09:56:22'),
 (61, 23, '371e748a-4a3e-439a-8b5b-fa2553296f58', '2026-03-16 16:12:44'),
 (62, 5, 'c3bc88fd-21e6-4771-881f-f57e8a562c43', '2026-03-16 16:23:53'),
-(63, 5, '7a6b80aa-e16d-4d9c-921e-4690c0cac76c', '2026-03-18 07:57:29');
+(63, 5, '7a6b80aa-e16d-4d9c-921e-4690c0cac76c', '2026-03-18 07:57:29'),
+(64, 24, '2b3a5328-19c5-40e3-b75a-ae6bf0da6610', '2026-03-24 04:51:27');
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -440,8 +442,8 @@ INSERT INTO `sessions` (`id_session`, `id_client`, `token`, `expires_at`) VALUES
 -- Ограничения внешнего ключа таблицы `bouquets`
 --
 ALTER TABLE `bouquets`
-  ADD CONSTRAINT `bouquets_ibfk_2` FOREIGN KEY (`id_occasion`) REFERENCES `occasion` (`id_occassion`),
-  ADD CONSTRAINT `bouquets_ibfk_1` FOREIGN KEY (`id_base_color`) REFERENCES `base_color_palette` (`id_base_color`);
+  ADD CONSTRAINT `bouquets_ibfk_1` FOREIGN KEY (`id_base_color`) REFERENCES `base_color_palette` (`id_base_color`),
+  ADD CONSTRAINT `bouquets_ibfk_2` FOREIGN KEY (`id_occasion`) REFERENCES `occasion` (`id_occasion`);
 
 --
 -- Ограничения внешнего ключа таблицы `bouquet_structure`

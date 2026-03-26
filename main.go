@@ -5,9 +5,12 @@ import (
 	"database/sql"
 	"log"
 	"myproject/admin"
+	basecolorpalette "myproject/base_color_palette"
 	"myproject/bouquet"
 	"myproject/client"
 	"myproject/database"
+	"myproject/flowers"
+	"myproject/occasions"
 	"myproject/order"
 	orderitems "myproject/order_items"
 	orderstatuses "myproject/order_statuses"
@@ -81,6 +84,18 @@ func main() {
 		RDB: &base,
 	}
 
+	color_base := basecolorpalette.ColorBase{
+		CDB: &base,
+	}
+
+	occasion_base := occasions.OccasionBase{
+		ODB: &base,
+	}
+
+	flower_base := flowers.FlowerBase{
+		FDB: &base,
+	}
+
 	// Настраиваем маршруты
 	mux := http.NewServeMux()
 	mux.HandleFunc("/bouquets", utils.ErrorHandler(bouquet_base.BouquetsHandler))
@@ -99,6 +114,12 @@ func main() {
 	mux.HandleFunc("/reviews/", utils.ErrorHandler(review_base.ReviewsHandler))           //отзывы
 	mux.HandleFunc("/reviews/access", utils.ErrorHandler(review_base.ReviewAccessCheckHandler))
 	mux.HandleFunc("/order_data/", utils.ErrorHandler(order_base.OrderIdHandler)) // страница заказа
+
+	//----------ФИЛЬТРЫ------
+	mux.HandleFunc("/colors", utils.ErrorHandler(color_base.ColorsHandler))                         // список colors для фильтров
+	mux.HandleFunc("/occasions", utils.ErrorHandler(occasion_base.OccasionsHandler))                //список назначений букетов
+	mux.HandleFunc("/flowers", utils.ErrorHandler(flower_base.FlowersHandler))                      // спписок цветков
+	mux.HandleFunc("/price_extremes", utils.ErrorHandler(bouquet_base.MaxMinPricesBouquetsHandler)) // максимальная и минимальная цена букетов для фильтра
 
 	// Создаем файловый сервер, который смотрит в папку "./static"
 	fileServer := http.FileServer(http.Dir("./static"))

@@ -11,6 +11,36 @@ type Bouquet struct {
 	Type            string  `json:"type"`
 }
 
+type BouquetForFilters struct {
+	IDBouquet       int     `json:"id_bouquet"`
+	Name            string  `json:"name"`
+	Description     string  `json:"description"`
+	Price           float64 `json:"price"`
+	ImageUrl        string  `json:"image_url"`
+	ReserveImageUrl string  `json:"reserve_image_url"`
+	ColorHex        string  `json:"hex"`
+	ColorName       string  `json:"color_name"`
+	Type            string  `json:"type"`
+	OccasionName    string  `json:"occasion_name"`
+	FlowersList     string  `json:"flowers_list"`
+}
+
+type Structure struct {
+	IDBouquetStructure int `json:"id_bouquet_strusture"`
+	IDBouquet          int `json:"id_bouquet"`
+	IDFlower           int `json:"id_flower"`
+}
+
+type Flower struct {
+	IDFlower   int    `json:"id_flower"`
+	NameFlower string `json:"name_flower"`
+}
+
+type Occasion struct {
+	IDOccasion   int    `json:"id_occasion"`
+	OccasionName string `json:"occasion_name"`
+}
+
 type Client struct {
 	IDClient   int    `json:"id_client"`
 	Last_name  string `json:"last_name"`
