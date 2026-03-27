@@ -173,7 +173,7 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 
 		//query := "SELECT id_bouquet, name, description, price, image_url, reserve_image_url, id_base_color, type FROM bouquets"
 		base_query := "SELECT b.id_bouquet, b.name, b.description, b.price, b.image_url, b.reserve_image_url, color_p.hex, color_p.color_name, b.type, o.occasion_name," +
-			" GROUP_CONCAT(f.name_flower) as flowers_list" +
+			" COALESCE(GROUP_CONCAT(f.name_flower), '') as flowers_list" +
 			" FROM bouquets b" +
 			" LEFT JOIN base_color_palette color_p ON  b.id_base_color = color_p.id_base_color" +
 			" LEFT JOIN occasion o  ON b.id_occasion = o.id_occasion" +
@@ -185,12 +185,27 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 		var where_conditions []string
 		var queryArgs []any
 
+		// условия в скобках черзе AND
+
+		var global_conditions []string // (type AND price)
+
 		if requ_type == "usual" || requ_type == "special" {
 			whereTypestr := "b.type = ?"
-			where_conditions = append(where_conditions, whereTypestr)
+			global_conditions = append(global_conditions, whereTypestr)
 			queryArgs = append(queryArgs, requ_type)
 		}
 
+		if maxPrice != "" {
+			price_condition := "b.price <= ?"
+			global_conditions = append(global_conditions, price_condition)
+			queryArgs = append(queryArgs, maxPrice)
+		}
+		if len(global_conditions) > 0 {
+			global_cond := strings.Join(global_conditions, " AND ")
+			where_conditions = append(where_conditions, global_cond)
+		}
+
+		var variative_conditions []string // (color OR flower OR occasion)
 		if len(colors_list) > 0 {
 			var colors []string
 			colors_condition := "color_p.color_name IN ("
@@ -199,7 +214,7 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 				queryArgs = append(queryArgs, colors_list[i])
 			}
 			fullColors := colors_condition + strings.Join(colors, ", ") + ")"
-			where_conditions = append(where_conditions, fullColors)
+			variative_conditions = append(variative_conditions, fullColors)
 		}
 
 		if len(occasions_list) > 0 {
@@ -210,7 +225,7 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 				queryArgs = append(queryArgs, occasions_list[i])
 			}
 			fullOccasions := occasions_condition + strings.Join(occasions, ", ") + ")"
-			where_conditions = append(where_conditions, fullOccasions)
+			variative_conditions = append(variative_conditions, fullOccasions)
 
 		}
 
@@ -222,24 +237,20 @@ func (b BouquetBase) BouquetsHandler(w http.ResponseWriter, r *http.Request) *ut
 				queryArgs = append(queryArgs, flowers_list[i])
 			}
 			fullFlowers := flowers_condition + strings.Join(flowers, ", ") + ")"
-			where_conditions = append(where_conditions, fullFlowers)
+			variative_conditions = append(variative_conditions, fullFlowers)
 		}
 
-		var price_condition string = ""
-		if maxPrice != "" {
-			price_condition = "b.price <= ?"
-			queryArgs = append(queryArgs, maxPrice)
+		if len(variative_conditions) > 0 {
+			variative_cond := "(" + strings.Join(variative_conditions, " OR ") + ")"
+			where_conditions = append(where_conditions, variative_cond)
 		}
 
 		ending := " GROUP BY b.id_bouquet " // но если в массиве условий нет условия для фильтрации по цветам то эту часть вставлять не нужно
 		fullQuery := base_query + ending
 		// если массив условий не пустой, собиарем полностью
 		if len(where_conditions) > 0 {
-			whereQueryes := strings.Join(where_conditions, " OR ")
-			if maxPrice != "" {
-				whereQueryes += " AND " + price_condition
-			}
-			fullQuery = base_query + " WHERE " + whereQueryes + ending
+			where_cond := strings.Join(where_conditions, " AND ")
+			fullQuery = base_query + " WHERE " + where_cond + ending
 		}
 		rows, err = db.QueryContext(context, fullQuery, queryArgs...)
 
