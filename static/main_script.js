@@ -115,7 +115,30 @@ function GetParamsToFilter(category, finalParams){
     finalParams.append(category, id);
   })
 }
-
+/**
+ * Добавляет визуальную отметку выбранным цветам
+ */
+function initColorCheckboxes() {
+    const colorDivs = document.querySelectorAll('.colorChoosediv');
+    colorDivs.forEach(div => {
+        const checkbox = div.querySelector('input[type="checkbox"]');
+        if (!checkbox) return;
+        
+        // Устанавливаем начальное состояние
+        if (checkbox.checked) {
+            div.classList.add('selected');
+        }
+        
+        // Слушаем изменения
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                div.classList.add('selected');
+            } else {
+                div.classList.remove('selected');
+            }
+        });
+    });
+}
 /**
  * вызывается из слушателя кнопки
  */
@@ -180,13 +203,11 @@ function BuildCheckbox(objects, category, count){
 /**
  * Создает элементы фильтрации в соответствии с данными на базе
  */
-function loadFiltersElements(){
+function loadFiltersElements() {
   const filters_container = document.getElementById("filters_container");
 
-  //находим максимальную и минимальную цену
-  //список назначений букетов
-  //узнаем, каких цветов есть букеты
-  //узнаем какие цветки могут быть в составе
+  // очищаем контейнер перед добавлением
+  filters_container.innerHTML = '';
 
   const requests = [
     fetch('/price_extremes'),
@@ -196,96 +217,161 @@ function loadFiltersElements(){
   ];
 
   Promise.all(requests)
-  .then(resp => {
+    .then(resp => {
       return Promise.all(resp.map(r => r.json()));
-  })
-  .then(([extremes, occasions, colors, flowers]) => {
-    // тут по идее нужно вызвать функцию которая отрисует каждый элемент либо сделать это сразу тут
-
-    //_________ползунок для выбора цены
-    const inputPrice = document.createElement('input');
-    inputPrice.id = "inputPrice";
-    inputPrice.type = "range";
-    inputPrice.max = extremes.maxPrice;
-    inputPrice.min = extremes.minPrice;
-    inputPrice.value = extremes.maxPrice;
-    //добавить рядом с ним маленький <span>, 
-    // который будет обновляться и показывать текущее число, когда ползунок двигают (событие input)
-    filters_container.appendChild(inputPrice);
-
-
-    //_____СУКА ОКАКАШОНС 
-    const occasions_div = document.createElement('div');
-    occasions_div.id = "occasions_div";
-    let count = 0;
-    occasions.forEach((occasion) => {
-      // вызов функции я того туда сюда манала, ее ж написать еще надо
-      let category = "occasion_names";
-      const data = [
-        occasion.occasion_name,//value
-        occasion.occasion_name//name
-      ];
-      const div = BuildCheckbox(data, category, count);
-      occasions_div.appendChild(div);
-      count ++;
     })
+    .then(([extremes, occasions, colors, flowers]) => {
 
+      // ========== ПОЛЗУНОК ДЛЯ ВЫБОРА ЦЕНЫ ==========
+      const priceContainer = document.createElement('div');
+      priceContainer.className = 'price-filter-container';
+      
+      // заголовок для цены
+      const priceTitle = document.createElement('div');
+      priceTitle.className = 'filter-title';
+      priceTitle.textContent = '💰 Цена до';
+      priceContainer.appendChild(priceTitle);
+      
+      // контент для цены
+      const priceContent = document.createElement('div');
+      priceContent.className = 'filter-content';
+      
+      const inputPrice = document.createElement('input');
+      inputPrice.id = "inputPrice";
+      inputPrice.type = "range";
+      inputPrice.max = extremes.maxPrice;
+      inputPrice.min = extremes.minPrice;
+      inputPrice.value = extremes.maxPrice;
+      inputPrice.style.width = '100%';
+      priceContent.appendChild(inputPrice);
+      
+      const priceValue = document.createElement('span');
+      priceValue.className = 'price-value';
+      priceValue.textContent = `${Math.round(extremes.maxPrice).toLocaleString('ru-RU')} ₽`;
+      priceContent.appendChild(priceValue);
+      
+      inputPrice.addEventListener('input', function() {
+        priceValue.textContent = `${Math.round(this.value).toLocaleString('ru-RU')} ₽`;
+      });
+      
+      priceContainer.appendChild(priceContent);
+      filters_container.appendChild(priceContainer);
 
-    //______цветы розы мимозы
-    const flowers_div = document.createElement('div');
-    flowers_div.id = "flowers_div";
-    count = 0;
-    flowers.forEach((flower) => {
-      let category = "flowers_names";// поменять на flowers_list?
-      const data = [
-        flower.name_flower,
-        flower.name_flower
-      ];
+      // ========== НАЗНАЧЕНИЕ ==========
+      const occasions_div = document.createElement('div');
+      occasions_div.id = "occasions_div";
+      
+      const occasionsTitle = document.createElement('div');
+      occasionsTitle.className = 'filter-title';
+      occasionsTitle.textContent = '✨ По назначению';
+      occasions_div.appendChild(occasionsTitle);
+      
+      const occasionsContent = document.createElement('div');
+      occasionsContent.className = 'filter-content';
+      
+      let occasionsCount = 0;
+      occasions.forEach((occasion) => {
+        let category = "occasion_names";
+        const data = [
+          occasion.occasion_name,
+          occasion.occasion_name
+        ];
+        const div = BuildCheckbox(data, category, occasionsCount);
+        occasionsContent.appendChild(div);
+        occasionsCount++;
+      })
+      occasions_div.appendChild(occasionsContent);
 
-      const div = BuildCheckbox(data, category, count);
-      flowers_div.appendChild(div);
-      count++;
+      // ========== ЦВЕТЫ В БУКЕТЕ ==========
+      const flowers_div = document.createElement('div');
+      flowers_div.id = "flowers_div";
+      
+      const flowersTitle = document.createElement('div');
+      flowersTitle.className = 'filter-title';
+      flowersTitle.textContent = '🌸 Цветы в букете';
+      flowers_div.appendChild(flowersTitle);
+      
+      const flowersContent = document.createElement('div');
+      flowersContent.className = 'filter-content';
+      
+      let flowersCount = 0;
+      flowers.forEach((flower) => {
+        let category = "flowers_names";
+        const data = [
+          flower.name_flower,
+          flower.name_flower
+        ];
+        const div = BuildCheckbox(data, category, flowersCount);
+        flowersContent.appendChild(div);
+        flowersCount++;
+      })
+      flowers_div.appendChild(flowersContent);
+
+      // ========== ПАЛИТРА ==========
+      const palitra_nahui = document.createElement('div');
+      palitra_nahui.id = "palitra_nahui";
+      
+      const palitraTitle = document.createElement('div');
+      palitraTitle.className = 'filter-title';
+      palitraTitle.textContent = '🎨 Цветовая гамма';
+      palitra_nahui.appendChild(palitraTitle);
+      
+      const palitraContent = document.createElement('div');
+      palitraContent.className = 'filter-content';
+      
+      let colorCount = 0;
+      colors.forEach((color) => {
+        if (color.name === "не указан") return;
+        
+        const colorChoosediv = document.createElement('div');
+        colorChoosediv.className = "colorChoosediv";
+
+        let category = "color_names";
+        let data = [
+          color.name,
+          color.name
+        ];
+        const div = BuildCheckbox(data, category, colorCount);
+
+        const square = document.createElement('div');
+        square.style.width = "25px";
+        square.style.height = "25px";
+        square.style.borderRadius = "50%";
+        square.style.background = `#${color.hex}`;
+        square.style.border = "2px solid white";
+        square.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+
+        colorChoosediv.appendChild(square);
+        colorChoosediv.appendChild(div);
+        
+        const label = colorChoosediv.querySelector('label');
+        if (label) label.style.display = 'none';
+
+        palitraContent.appendChild(colorChoosediv);
+        colorCount++;
+      })
+      palitra_nahui.appendChild(palitraContent);
+      
+      // ========== КОНТЕЙНЕР ДЛЯ ТРЁХ БЛОКОВ В РЯД ==========
+      const rowContainer = document.createElement('div');
+      rowContainer.className = 'filters-row';
+      
+      rowContainer.appendChild(occasions_div);
+      rowContainer.appendChild(flowers_div);
+      rowContainer.appendChild(palitra_nahui);
+      
+      filters_container.appendChild(rowContainer);
+      
+      // ========== КНОПКА ==========
+      const button = document.createElement('button');
+      button.id = "filterButton";
+      button.textContent = "Применить";
+      button.addEventListener('click', applyFilters);
+      filters_container.appendChild(button);
+      
+      initColorCheckboxes();
     })
-
-    //____ПАЛИТРА
-    const palitra_nahui = document.createElement('div');
-    palitra_nahui.id = "palitra_nahui";
-    count = 0;
-    colors.forEach((color) => {
-      // создаем контейнер с цветным квадратиком
-      const colorChoosediv = document.createElement('div');
-      colorChoosediv.className = "colorChoosediv";
-
-      let category = "color_names";
-      let data = [
-        color.name,
-        color.name
-      ] 
-      const div = BuildCheckbox(data, category, count);
-
-      const square = document.createElement('div');
-      square.style.width = "10px";
-      square.style.height  = "10px";
-      square.style.background = `#${color.hex}`;
-
-      colorChoosediv.appendChild(square);
-      colorChoosediv.appendChild(div);
-
-      palitra_nahui.appendChild(colorChoosediv);
-      count ++;
-    })
-    
-    const button = document.createElement('button');
-    button.id = "filterButton";
-    button.textContent = "Применить";
-    button.addEventListener('click', applyFilters);
-
-    filters_container.appendChild(occasions_div);
-    filters_container.appendChild(flowers_div);
-    filters_container.appendChild(palitra_nahui);
-    filters_container.appendChild(button);
-  })
-  .catch(err => console.error("Один из запросов упал", err));
+    .catch(err => console.error("Один из запросов упал", err));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
